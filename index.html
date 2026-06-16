@@ -1,5 +1,178 @@
-<script>
-function calculate(){
-    document.getElementById("result").innerHTML = "按钮成功运行！";
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>赔率计算器</title>
+
+<style>
+body {
+    background: #111;
+    color: white;
+    font-family: Arial;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
 }
+
+h2 {
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 18px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #f5c542;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+}
+
+#result {
+    margin-top: 20px;
+    line-height: 1.6;
+}
+</style>
+</head>
+
+<body>
+
+<h2>赔率整数计算器</h2>
+
+<input id="a" type="number" step="any" placeholder="输入赔率 1">
+<input id="b" type="number" step="any" placeholder="输入赔率 2">
+<input id="c" type="number" step="any" placeholder="输入赔率 3">
+
+<button onclick="calculate()">
+一键计算
+</button>
+
+<div id="result"></div>
+
+
+<script>
+
+function gcd(x, y) {
+    x = Math.abs(Math.round(x));
+    y = Math.abs(Math.round(y));
+
+    while (y !== 0) {
+        let temp = y;
+        y = x % y;
+        x = temp;
+    }
+
+    return x;
+}
+
+
+function lcm(x, y) {
+    return x / gcd(x, y) * y;
+}
+
+
+// 把小数转成最简分数的分子
+function numerator(num) {
+
+    let text = num.toString();
+
+    if (text.indexOf(".") === -1) {
+        return num;
+    }
+
+    let digit = text.split(".")[1].length;
+
+    let base = Math.pow(10, digit);
+
+    let top = Math.round(num * base);
+
+    return top / gcd(top, base);
+}
+
+
+function calculate() {
+
+    let o1 = parseFloat(document.getElementById("a").value);
+    let o2 = parseFloat(document.getElementById("b").value);
+    let o3 = parseFloat(document.getElementById("c").value);
+
+
+    if (isNaN(o1)  isNaN(o2)  isNaN(o3)) {
+        document.getElementById("result").innerHTML =
+        "请输入三个有效赔率";
+        return;
+    }
+
+
+    // 倒数总和
+    let sum = 1/o1 + 1/o2 + 1/o3;
+
+
+    // 理论收益率
+    let rate = (1/sum - 1) * 100;
+
+
+    let html = "";
+
+    html += "倒数总和："
+         + sum.toFixed(4)
+         + "<br>";
+
+    html += "理论收益率："
+         + rate.toFixed(2)
+         + "%<br><br>";
+
+
+    if (sum < 1) {
+
+        // 最小共同返还
+        let R = lcm(
+                lcm(numerator(o1), numerator(o2)),
+                numerator(o3)
+        );
+
+
+        let bet1 = R / o1;
+        let bet2 = R / o2;
+        let bet3 = R / o3;
+
+
+        html += "✅ 存在套利<br><br>";
+
+        html += "最低整数下注：<br>";
+
+        html += "赔率 1："
+             + bet1 + "<br>";
+
+        html += "赔率 2："
+             + bet2 + "<br>";
+
+        html += "赔率 3："
+             + bet3 + "<br><br>";
+
+        html += "统一返还："
+             + R;
+
+    } else {
+
+        html += "❌ 无套利机会";
+
+    }
+
+
+    document.getElementById("result").innerHTML = html;
+
+}
+
 </script>
+
+</body>
+</html>
