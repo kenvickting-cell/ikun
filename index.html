@@ -54,12 +54,25 @@ let c = Number(document.getElementById("o3").value);
 
 let sum = 1/a + 1/b + 1/c;
 
-document.getElementById("result").innerHTML =
-"倒数总和：" + sum.toFixed(4);
+// 理论收益率
+let profit = (1/sum - 1) * 100;
+
+let result = "";
+
+result += "倒数总和：" + sum.toFixed(4) + "<br>";
+result += "理论收益率：" + profit.toFixed(2) + "%<br><br>";
+
+if(sum < 1){
+    result += "✅ 存在套利";
+}
+else{
+    result += "❌ 无套利";
+}
+
+document.getElementById("result").innerHTML = result;
 
 }
 
 </script>
-
 </body>
 </html>
