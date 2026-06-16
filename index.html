@@ -52,10 +52,40 @@ let a = Number(document.getElementById("o1").value);
 let b = Number(document.getElementById("o2").value);
 let c = Number(document.getElementById("o3").value);
 
+// 总倒数
 let sum = 1/a + 1/b + 1/c;
 
 // 理论收益率
 let profit = (1/sum - 1) * 100;
+
+// ====== 新增：总资金（你可以改这个数）======
+let totalMoney = 1000;
+
+// ====== 计算每一项比例 ======
+let pa = (1/a) / sum;
+let pb = (1/b) / sum;
+let pc = (1/c) / sum;
+
+// ====== 计算下注金额 ======
+let na = totalMoney * pa;
+let nb = totalMoney * pb;
+let nc = totalMoney * pc;
+
+// ====== 转成整数（最低下注单位）======
+na = Math.floor(na);
+nb = Math.floor(nb);
+nc = Math.floor(nc);
+
+// ====== 重新计算实际投入 ======
+let realTotal = na + nb + nc;
+
+// ====== 统一返还（任何结果赢都一样）======
+let payoutA = na * a;
+let payoutB = nb * b;
+let payoutC = nc * c;
+
+// 取最小返还（理论上应该接近一致）
+let payout = Math.min(payoutA, payoutB, payoutC);
 
 let result = "";
 
@@ -63,7 +93,17 @@ result += "倒数总和：" + sum.toFixed(4) + "<br>";
 result += "理论收益率：" + profit.toFixed(2) + "%<br><br>";
 
 if(sum < 1){
-    result += "✅ 存在套利";
+    result += "✅ 存在套利<br><br>";
+
+    result += "📌 最低整数下注方案：<br>";
+    result += "A下注：" + na + "<br>";
+    result += "B下注：" + nb + "<br>";
+    result += "C下注：" + nc + "<br><br>";
+
+    result += "💰 总投入：" + realTotal + "<br>";
+    result += "💵 统一返还：" + payout.toFixed(2) + "<br>";
+
+    result += "📈 理论利润：" + (payout - realTotal).toFixed(2) + "<br>";
 }
 else{
     result += "❌ 无套利";
