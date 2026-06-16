@@ -82,10 +82,12 @@ function gcd(a,b){
     return a;
 }
 
+
 // 最小公倍数
 function lcm(a,b){
     return a / gcd(a,b) * b;
 }
+
 
 // 取得赔率化简后的分子
 function getNumerator(x){
@@ -100,31 +102,37 @@ function getNumerator(x){
 
     let denominator = Math.pow(10,digits);
 
-    let numerator = x * denominator;
+    let numerator = Math.round(x * denominator);
 
     let g = gcd(numerator, denominator);
 
     return numerator / g;
 }
 
+
 function calculate(){
+    alert("按钮正常");
 
     let o1 = parseFloat(document.getElementById("o1").value);
     let o2 = parseFloat(document.getElementById("o2").value);
     let o3 = parseFloat(document.getElementById("o3").value);
 
+
     // 检查输入
-    if(!o1  !o2  !o3){
+    if(isNaN(o1)  isNaN(o2)  isNaN(o3))
         document.getElementById("result").innerHTML =
         "<span class='bad'>请输入正确赔率</span>";
         return;
     }
 
+
     // 倒数总和
     let sum = 1/o1 + 1/o2 + 1/o3;
 
+
     // 理论收益率
     let profit = (1/sum - 1) * 100;
+
 
     let text = "";
 
@@ -136,6 +144,7 @@ function calculate(){
     + profit.toFixed(2)
     + "%<br><br>";
 
+
     // 判断套利
     if(sum < 1){
 
@@ -146,9 +155,11 @@ function calculate(){
 
         let R = lcm(lcm(n1,n2), n3);
 
+
         let b1 = R / o1;
         let b2 = R / o2;
         let b3 = R / o3;
+
 
         text += "<span class='good'>✅ 存在套利</span><br><br>";
 
@@ -173,6 +184,7 @@ function calculate(){
         "<span class='bad'>❌ 无套利机会</span>";
 
     }
+
 
     document.getElementById("result").innerHTML = text;
 
